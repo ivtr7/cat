@@ -79,6 +79,31 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 @keyframes bgDrift { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(2vw, -1vh, 0) scale(1.06); } 100% { transform: translate3d(-1vw, 2vh, 0) scale(1.03); } }
 @keyframes bgRotate { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(360deg) scale(1); } }
 @media (max-width: 768px) { .hero-title { font-size: 32px; } .hero-subtitle { font-size: 16px; } .section-title { font-size: 32px; } .hero-icon { font-size: 120px; } .nav-link-custom { margin-left: 15px; font-size: 14px; } .modal-close { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 20px; } .hero-visual { display: none; } .hero-image-wrapper, .hero-icon { display: none; } .product-image-wrapper { height: 140px; } .footer-custom .text-end { text-align: left !important; margin-top: 15px; } .footer-brand { gap: 12px; } .footer-logo { max-height: 28px; } }
+    .cart-button { display: inline-flex; align-items: center; gap: 8px; margin-left: 20px; background: #37b34a; color: #fff; border: none; border-radius: 30px; padding: 8px 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(55,179,74,0.35); }
+    .cart-button i { font-size: 18px; }
+    .cart-count { display: inline-block; min-width: 22px; height: 22px; line-height: 22px; text-align: center; background: #fff; color: #37b34a; border-radius: 11px; font-weight: 700; font-size: 12px; }
+    .product-actions { padding: 0 20px 20px; display: flex; justify-content: flex-start; }
+    .add-cart-btn { background: #37b34a; color: #fff; border: none; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(55,179,74,0.35); }
+    .add-cart-btn:hover { background: #2d9639; }
+    .cart-panel { position: fixed; right: -420px; top: 0; width: 420px; height: 100vh; background: #fff; box-shadow: -10px 0 30px rgba(0,0,0,0.15); z-index: 2200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .cart-panel.active { right: 0; }
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2199; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; }
+    .cart-overlay.visible { opacity: 1; visibility: visible; }
+    .cart-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 2px solid #f0f2f4; font-weight: 700; }
+    .cart-close { background: #37b34a; color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 10px 20px; }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e9ecef; }
+    .cart-item-info { display: flex; flex-direction: column; }
+    .cart-item-name { font-weight: 600; }
+    .cart-item-actions { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: #f1f3f5; font-weight: 700; }
+    .qty-value { min-width: 24px; text-align: center; font-weight: 700; }
+    .remove-item { background: #ff4747; color: #fff; border: none; border-radius: 8px; padding: 6px 10px; }
+    .cart-actions { padding: 16px 20px; border-top: 2px solid #f0f2f4; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .cart-btn { width: 100%; min-height: 46px; padding: 12px 16px; font-size: 15px; border-radius: 10px; }
+    .btn-outline { background: #fff; color: #37b34a; border: 2px solid #37b34a; border-radius: 10px; padding: 12px; font-weight: 700; }
+    .btn-danger { background: #ff4747; color: #fff; border: none; border-radius: 10px; padding: 12px; font-weight: 700; }
+    @media (max-width: 520px) { .cart-panel { width: 100vw; } .cart-actions { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="ambient-bg">
@@ -91,6 +116,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
                 <div class="col-md-9">
                     <nav class="text-end">
                         <a href="#catalogo" class="nav-link-custom">Catálogo</a>
+                        <button id="openCartBtn" class="cart-button"><i class="fas fa-shopping-cart"></i><span id="cartCount" class="cart-count">0</span></button>
                     </nav>
                 </div>
             </div>
@@ -113,6 +139,19 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
             </div>
         </div>
     </section>
+    <div id="cartPanel" class="cart-panel">
+        <div class="cart-header">
+            <div>Carrinho</div>
+            <button id="closeCartBtn" class="cart-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-actions">
+            <button id="checkoutBtn" class="btn-custom cart-btn">Realizar pedido</button>
+            <button id="continueBtn" class="btn-outline cart-btn">Continuar comprando</button>
+            <button id="clearCartBtn" class="btn-danger cart-btn">Limpar carrinho</button>
+        </div>
+    </div>
+    <div id="cartOverlay" class="cart-overlay"></div>
 
     <section id="catalogo" class="products-section">
         <div class="container">
@@ -225,6 +264,9 @@ function renderProducts(list) {
                         <h3 class="product-title">${product.name}</h3>
                         <p class="product-description">${product.description}</p>
                     </div>
+                    <div class="product-actions">
+                        <button class="add-cart-btn" onclick="addToCart(${product.id})"><i class="fas fa-cart-plus"></i> Adicionar</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -304,6 +346,39 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', function() { if (window.scrollY > 200) btt.classList.add('visible'); else btt.classList.remove('visible'); });
     }
 });
+</script>
+    <script>
+const WHATSAPP_NUMBER = '5532998450698';
+let cart = [];
+
+function loadCart() { try { const raw = localStorage.getItem('sonhagro_cart'); cart = raw ? JSON.parse(raw) : []; } catch(e) { cart = []; } renderCart(); updateCartBadge(); }
+function saveCart() { localStorage.setItem('sonhagro_cart', JSON.stringify(cart)); }
+function addToCart(productId) { const p = products.find(x => x.id === productId); if (!p) return; const idx = cart.findIndex(c => c.id === productId); if (idx >= 0) { cart[idx].qty += 1; } else { cart.push({ id: p.id, name: p.name, qty: 1 }); } saveCart(); updateCartBadge(); renderCart(); }
+function incQty(productId) { const i = cart.findIndex(c => c.id === productId); if (i>=0) { cart[i].qty += 1; saveCart(); renderCart(); updateCartBadge(); } }
+function decQty(productId) { const i = cart.findIndex(c => c.id === productId); if (i>=0) { cart[i].qty = Math.max(0, cart[i].qty - 1); if (cart[i].qty===0) cart.splice(i,1); saveCart(); renderCart(); updateCartBadge(); } }
+function removeItem(productId) { cart = cart.filter(c => c.id !== productId); saveCart(); renderCart(); updateCartBadge(); }
+function clearCart() { cart = []; saveCart(); renderCart(); updateCartBadge(); }
+function renderCart() { const wrap = document.getElementById('cartItems'); if (!wrap) return; wrap.innerHTML = ''; if (cart.length === 0) { wrap.innerHTML = '<div class="text-muted">Seu carrinho está vazio</div>'; return; } cart.forEach(item => { const row = document.createElement('div'); row.className = 'cart-item'; row.innerHTML = `<div class="cart-item-info"><div class="cart-item-name">${item.name}</div></div><div class="cart-item-actions"><button class="qty-btn" onclick="decQty(${item.id})">-</button><div class="qty-value">${item.qty}</div><button class="qty-btn" onclick="incQty(${item.id})">+</button><button class="remove-item" onclick="removeItem(${item.id})"><i class="fas fa-trash"></i></button></div>`; wrap.appendChild(row); }); }
+function updateCartBadge() { const total = cart.reduce((s,i)=>s+i.qty,0); const el = document.getElementById('cartCount'); if (el) el.textContent = String(total); }
+function openCart() { const p = document.getElementById('cartPanel'); const o = document.getElementById('cartOverlay'); if (p) p.classList.add('active'); if (o) o.classList.add('visible'); }
+function closeCart() { const p = document.getElementById('cartPanel'); const o = document.getElementById('cartOverlay'); if (p) p.classList.remove('active'); if (o) o.classList.remove('visible'); }
+function formatCartMessage() {
+    const total = cart.reduce((s,i)=>s+i.qty,0);
+    const d = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const lines = cart.slice().sort((a,b)=>a.name.localeCompare(b.name)).map((item, idx)=> `${pad(idx+1)}. ${item.name} — x${item.qty}`);
+    const header = 'Pedido Sonhagro';
+    const meta = `Itens: ${total} | Data: ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+    return `${header}\n${meta}\n------------------------------\n${lines.join('\n')}\n------------------------------\nAguardo confirmação.`;
+}
+
+function checkoutCart() {
+    if (cart.length === 0) return;
+    const msg = formatCartMessage();
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+}
+document.addEventListener('DOMContentLoaded', function(){ loadCart(); updateCartBadge(); const oc = document.getElementById('openCartBtn'); const cc = document.getElementById('closeCartBtn'); const ct = document.getElementById('continueBtn'); const cl = document.getElementById('clearCartBtn'); const co = document.getElementById('checkoutBtn'); const ov = document.getElementById('cartOverlay'); if (oc) oc.addEventListener('click', openCart); if (cc) cc.addEventListener('click', closeCart); if (ct) ct.addEventListener('click', closeCart); if (cl) cl.addEventListener('click', clearCart); if (co) co.addEventListener('click', checkoutCart); if (ov) ov.addEventListener('click', closeCart); });
     </script>
     <button id="backToTop" class="back-to-top">▲</button>
     <div id="sweepOverlay" class="sweep-overlay"></div>
