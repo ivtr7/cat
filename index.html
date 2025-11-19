@@ -210,7 +210,6 @@ function renderProducts(list) {
     productsGrid.innerHTML = '';
     const items = list || products;
     items.forEach(product => {
-        const waUrl = 'https://wa.me/?text=' + encodeURIComponent('Quero saber mais sobre: ' + product.name);
         const productCard = `
             <div class="col-lg-2 col-md-3 col-sm-6">
                 <div class="product-card">
@@ -219,7 +218,6 @@ function renderProducts(list) {
                         <div class="product-overlay">
                             <div class="overlay-actions">
                                 <a href="javascript:void(0)" class="overlay-action" onclick="openModal(${product.id})"><i class="fas fa-search-plus"></i></a>
-                                <a href="${waUrl}" target="_blank" rel="noopener" class="overlay-action"><i class="fab fa-whatsapp"></i></a>
                             </div>
                         </div>
                     </div>
