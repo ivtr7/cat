@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonhagro - Catálogo de Produtos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #ffffff; color: #333; line-height: 1.6; }
+.ambient-bg { position: relative; overflow-x: hidden; }
+.ambient-bg::before, .ambient-bg::after { content: ''; position: fixed; pointer-events: none; z-index: 0; }
+.ambient-bg::before { top: -20vh; left: -15vw; width: 70vw; height: 70vw; background: radial-gradient(circle at 30% 30%, rgba(55,179,74,0.10) 0%, rgba(55,179,74,0.07) 25%, transparent 60%); filter: blur(60px); transform: translate3d(0,0,0) scale(1); animation: bgDrift 28s ease-in-out infinite alternate; }
+.ambient-bg::after { bottom: -25vh; right: -20vw; width: 60vw; height: 60vw; background: conic-gradient(from 160deg at 50% 50%, rgba(55,179,74,0.08), transparent 35%, rgba(55,179,74,0.06), transparent 70%); filter: blur(70px); transform: translate3d(0,0,0) scale(1); animation: bgRotate 60s linear infinite; mix-blend-mode: soft-light; }
+.hero-section { position: relative; z-index: 0; }
+.header-custom { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-bottom: 3px solid #37b34a; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.logo-img { max-height: 60px; width: auto; transition: transform 0.3s ease; }
+.logo-img:hover { transform: scale(1.05); }
+.nav-link-custom { display: inline-block; margin-left: 30px; color: #333; text-decoration: none; font-weight: 500; font-size: 16px; transition: color 0.3s ease; position: relative; }
+.nav-link-custom::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background-color: #37b34a; transition: width 0.3s ease; }
+.nav-link-custom:hover { color: #37b34a; }
+.nav-link-custom:hover::after { width: 100%; }
+.hero-section { background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 80px 0; position: relative; overflow: hidden; }
+.hero-section::before { content: ''; position: absolute; top: -50%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(55, 179, 74, 0.1) 0%, transparent 70%); border-radius: 50%; animation: bgDrift 32s ease-in-out infinite alternate; }
+.hero-title { font-size: 48px; font-weight: 700; color: #333; margin-bottom: 20px; animation: fadeInUp 0.8s ease; }
+.hero-subtitle { font-size: 20px; color: #666; margin-bottom: 30px; animation: fadeInUp 1s ease; }
+.btn-custom { display: inline-block; padding: 15px 40px; background-color: #37b34a; color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 16px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(55, 179, 74, 0.3); animation: fadeInUp 1.2s ease; }
+.btn-custom:hover { background-color: #2d9639; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(55, 179, 74, 0.4); color: white; }
+.hero-image-wrapper { text-align: center; animation: float 3s ease-in-out infinite; }
+.hero-icon { font-size: 200px; color: #37b34a; opacity: 0.2; }
+.products-section { padding: 80px 0; background-color: #ffffff; }
+.section-title { font-size: 42px; font-weight: 700; color: #333; margin-bottom: 10px; }
+.section-subtitle { font-size: 18px; color: #666; }
+.search-input { height: 46px; border-radius: 10px; border: 2px solid #e9ecef; }
+.sort-select { height: 46px; border-radius: 10px; border: 2px solid #e9ecef; }
+.results-info { font-weight: 600; color: #37b34a; }
+.product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; height: 100%; border: 2px solid transparent; }
+.product-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(55, 179, 74, 0.2); border-color: #37b34a; }
+.product-image-wrapper { position: relative; width: 100%; height: 160px; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); }
+.product-image { width: 100%; height: 100%; object-fit: contain; padding: 6px; background: #fff; transition: transform 0.2s ease; }
+.product-card:hover .product-image { transform: scale(1.02); }
+.product-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(55, 179, 74, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+.product-card:hover .product-overlay { opacity: 1; }
+.overlay-icon { font-size: 40px; color: white; }
+.overlay-actions { display: flex; gap: 16px; }
+.overlay-action { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); color: #fff; font-size: 22px; text-decoration: none; transition: transform 0.2s ease, background 0.2s ease; }
+.overlay-action:hover { transform: translateY(-2px); background: rgba(255,255,255,0.3); }
+.product-info { padding: 20px; }
+.product-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px; }
+.product-description { font-size: 13px; color: #666; line-height: 1.5; margin: 0; }
+.modal-custom { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); z-index: 2000; animation: fadeIn 0.3s ease; }
+.modal-custom.active { display: flex; align-items: center; justify-content: center; }
+.modal-content-custom { max-width: 90%; max-height: 90%; text-align: center; animation: zoomIn 0.3s ease; }
+.modal-content-custom img { max-width: 100%; max-height: 70vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.modal-info { background: white; padding: 20px; border-radius: 12px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.modal-info h3 { color: #37b34a; margin-bottom: 10px; font-size: 24px; }
+.modal-info p { color: #666; margin: 0; font-size: 16px; }
+.modal-close { position: absolute; top: 30px; right: 30px; background: #37b34a; border: none; width: 50px; height: 50px; border-radius: 50%; color: white; font-size: 24px; cursor: pointer; transition: all 0.3s ease; z-index: 2001; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: #2d9639; transform: rotate(90deg); }
+.footer-custom { background: linear-gradient(135deg, #2d9639 0%, #37b34a 100%); color: white; padding: 40px 0; margin-top: 80px; }
+.footer-custom h4 { font-weight: 700; margin-bottom: 15px; }
+.social-icons a { display: inline-block; margin-left: 15px; color: white; font-size: 24px; transition: transform 0.3s ease; }
+.social-icons a:hover { transform: translateY(-3px); }
+.footer-brand { display: flex; align-items: center; gap: 16px; }
+.footer-logo { max-height: 36px; width: auto; filter: brightness(0) invert(1); opacity: 0.95; transition: transform 0.3s ease, opacity 0.3s ease; }
+.footer-logo:hover { transform: scale(1.05); opacity: 1; }
+.footer-tagline { font-size: 14px; opacity: 0.9; }
+.back-to-top { position: fixed; right: 20px; bottom: 20px; width: 48px; height: 48px; border-radius: 50%; border: none; background: #37b34a; color: #fff; font-weight: 700; box-shadow: 0 6px 20px rgba(55, 179, 74, 0.4); cursor: pointer; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease; z-index: 2002; }
+.back-to-top.visible { opacity: 1; visibility: visible; }
+.back-to-top:hover { transform: translateY(-3px); }
+.sweep-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1500; opacity: 0; background: linear-gradient(to bottom, rgba(55,179,74,0.00) 0%, rgba(55,179,74,0.20) 10%, rgba(255,255,255,0.35) 22%, rgba(55,179,74,0.32) 35%, rgba(55,179,74,0.14) 60%, rgba(55,179,74,0.00) 100%); filter: blur(3px); mix-blend-mode: screen; transform: translateY(-120%); will-change: transform, opacity; animation-name: sweepDown; animation-duration: 2.8s; animation-timing-function: ease-in-out; animation-delay: 5s; animation-iteration-count: 1; animation-fill-mode: forwards; }
+@keyframes sweepDown { 0% { opacity: 0; transform: translateY(-120%); } 8% { opacity: 0.18; } 50% { opacity: 0.35; transform: translateY(0%); } 92% { opacity: 0.16; } 100% { opacity: 0; transform: translateY(120%); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes bgDrift { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(2vw, -1vh, 0) scale(1.06); } 100% { transform: translate3d(-1vw, 2vh, 0) scale(1.03); } }
+@keyframes bgRotate { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(360deg) scale(1); } }
+@media (max-width: 768px) { .hero-title { font-size: 32px; } .hero-subtitle { font-size: 16px; } .section-title { font-size: 32px; } .hero-icon { font-size: 120px; } .nav-link-custom { margin-left: 15px; font-size: 14px; } .modal-close { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 20px; } .hero-visual { display: none; } .hero-image-wrapper, .hero-icon { display: none; } .product-image-wrapper { height: 140px; } .footer-custom .text-end { text-align: left !important; margin-top: 15px; } .footer-brand { gap: 12px; } .footer-logo { max-height: 28px; } }
+    </style>
+</head>
+<body class="ambient-bg">
+    <header class="header-custom">
+        <div class="container">
+            <div class="row align-items-center py-4">
+                <div class="col-md-3">
+                    <img src="/assets/a2.png" alt="Sonhagro Logo" class="logo-img">
+                </div>
+                <div class="col-md-9">
+                    <nav class="text-end">
+                        <a href="#catalogo" class="nav-link-custom">Catálogo</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Catálogo de Produtos Sonhagro</h1>
+                    <p class="hero-subtitle">Produtos exclusivos para franqueados: brindes, uniformes e materiais promocionais de alta qualidade</p>
+                    <a href="#catalogo" class="btn-custom">Ver Catálogo</a>
+                </div>
+                <div class="col-lg-6 hero-visual">
+                    <div class="hero-image-wrapper">
+                        <i class="fas fa-box-open hero-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="catalogo" class="products-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Nossos Produtos</h2>
+                <p class="section-subtitle">Produtos exclusivos para franqueados Sonhagro</p>
+            </div>
+
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <input id="searchInput" type="text" class="form-control search-input" placeholder="Buscar produtos...">
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <select id="sortSelect" class="form-select sort-select">
+                        <option value="name-asc">Ordenar: A–Z</option>
+                        <option value="name-desc">Ordenar: Z–A</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-md-end">
+                    <div id="resultsInfo" class="results-info"></div>
+                </div>
+            </div>
+
+            <div class="row g-4" id="productsGrid">
+            </div>
+        </div>
+    </section>
+
+    <div id="imageModal" class="modal-custom">
+        <button class="modal-close" onclick="closeModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-content-custom">
+            <img id="modalImage" src="" alt="Produto">
+            <div class="modal-info">
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="footer-brand">
+                        <img src="/assets/a2.png" alt="Sonhagro" class="footer-logo">
+                        <div class="footer-tagline">Produtos de qualidade para nossos franqueados</div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+const products = [
+    { id: 1, name: "Canivete personalizado Sonhagro", description: "Canivete portátil com logo Sonhagro, ideal para presentear.", image: "/assets/1 (1).png" },
+    { id: 2, name: "Camisa social Sonhagro branca", description: "Camisa social branca com bordado Sonhagro, elegância e conforto.", image: "/assets/1 (2).png" },
+    { id: 3, name: "Sacola / Bag Sonhagro", description: "Sacola reforçada e sustentável, perfeita para feiras e eventos.", image: "/assets/1 (3).png" },
+    { id: 4, name: "Agenda de couro Sonhagro", description: "Agenda em couro sintético com estampa da marca, organize seu dia com estilo.", image: "/assets/1 (4).png" },
+    { id: 5, name: "Agenda de couro verde Sonhagro", description: "Versão verde da agenda premium, combinando com a identidade visual da marca.", image: "/assets/1 (5).png" },
+    { id: 6, name: "Banner horizontal Sonhagro", description: "Banner de mesa ou parede, ideal para divulgação em pontos de venda.", image: "/assets/1 (6).png" },
+    { id: 7, name: "Fachada Sonhagro", description: "Adesivo de fachada para unidades franqueadas, alta visibilidade e durabilidade.", image: "/assets/1 (7).png" },
+    { id: 8, name: "Abridor de garrafas Sonhagro", description: "Abridor metálico resistente, leve e prático para eventos e brindes.", image: "/assets/1 (8).png" },
+    { id: 9, name: "Wind banner Sonhagro", description: "Wind banner retrátil para uso externo, fácil transporte e montagem rápida.", image: "/assets/1 (9).png" },
+    { id: 10, name: "Kit churrasco / tábua e faca", description: "Conjunto tábua + faca personalizado, presente ideal para clientes e parceiros.", image: "/assets/1 (10).png" },
+    { id: 11, name: "Mochila personalizada Sonhagro", description: "Mochila resistente com logo bordado, espaçosa e confortável para o dia a dia.", image: "/assets/1 (11).png" },
+    { id: 12, name: "Boné personalizado Sonhagro", description: "Boné ajustável com bordado frontal, proteção solar e estilo em um só produto.", image: "/assets/1 (12).png" },
+    { id: 13, name: "Outdoor Sonhagro", description: "Outdoor de grande formato para campanhas, impressão de alta resolução.", image: "/assets/1 (13).png" },
+    { id: 14, name: "Uniformes Sonhagro", description: "Linha completa de uniformes para equipe: camisetas, calças e acessórios.", image: "/assets/1 (14).png" },
+    { id: 15, name: "Chaveiro em couro e resina Sonhagro", description: "Chaveiro premium combinando couro e resina, elegante e resistente.", image: "/assets/1 (15).png" },
+    { id: 16, name: "Barraca com lateral personalizada Sonhagro", description: "Barraca promocional com laterais personalizáveis, ideal para feiras e eventos.", image: "/assets/1 (16).png" },
+    { id: 17, name: "Tenda personalizada Sonhagro", description: "Tenda resistente com cobertura estampada, proteção e visibilidade garantidas.", image: "/assets/1 (17).png" },
+    { id: 18, name: "Cartões de visita Sonhagro", description: "Cartão de visita com acabamento fosco e verniz localizado, deixe sua marca.", image: "/assets/1 (18).png" },
+    { id: 19, name: "Panfleto Sonhagro", description: "Panfleto promocional frente e verso, papel couchê de alta qualidade.", image: "/assets/1 (19).png" },
+    { id: 20, name: "Balão inflável para eventos (personalizado Sonhagro)", description: "Balão promocional inflável com logo, chama atenção em qualquer ambiente.", image: "/assets/1 (20).png" },
+    { id: 21, name: "Banner vertical Sonhagro", description: "Banner vertical para exposição em vitrines e stands, fácil armazenamento.", image: "/assets/1 (21).png" },
+    { id: 22, name: "Garrafa térmica com temperatura Sonhagro", description: "Garrafa térmica digital que mostra a temperatura, moderna e útil.", image: "/assets/1 (22).png" },
+    { id: 24, name: "Copo térmico Sonhagro", description: "Copo térmico com isolamento, mantém a bebida na temperatura ideal.", image: "/assets/1 (24).png" },
+    { id: 25, name: "Chaveiro de couro Sonhagro", description: "Chaveiro minimalista em couro legítimo, presente sofisticado para clientes.", image: "/assets/1 (25).png" },
+    { id: 26, name: "Plotagem de carro marca Sonhagro", description: "Envelopamento completo ou parcial de veículos, transforme seu carro em mídia.", image: "/assets/1 (26).png" },
+    { id: 27, name: "Caneta Sonhagro", description: "Caneta esferográfica de alta qualidade com gravação a laser.", image: "/assets/1 (27).png" }
+];
+
+function renderProducts(list) {
+    const productsGrid = document.getElementById('productsGrid');
+    productsGrid.innerHTML = '';
+    const items = list || products;
+    items.forEach(product => {
+        const waUrl = 'https://wa.me/?text=' + encodeURIComponent('Quero saber mais sobre: ' + product.name);
+        const productCard = `
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <img loading="lazy" src="${product.image}" alt="${product.name}" class="product-image">
+                        <div class="product-overlay">
+                            <div class="overlay-actions">
+                                <a href="javascript:void(0)" class="overlay-action" onclick="openModal(${product.id})"><i class="fas fa-search-plus"></i></a>
+                                <a href="${waUrl}" target="_blank" rel="noopener" class="overlay-action"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        productsGrid.innerHTML += productCard;
+    });
+}
+
+function applyFilters() {
+    const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+    const sort = document.getElementById('sortSelect')?.value || 'name-asc';
+    let filtered = products.filter(p => {
+        const text = (p.name + ' ' + p.description).toLowerCase();
+        return text.includes(q);
+    });
+    if (sort === 'name-asc') {
+        filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sort === 'name-desc') {
+        filtered = filtered.sort((a, b) => b.name.localeCompare(a.name));
+    }
+    renderProducts(filtered);
+    const info = document.getElementById('resultsInfo');
+    if (info) info.textContent = filtered.length + ' itens encontrados';
+}
+
+function openModal(productId) {
+    const product = products.find(p => p.id === productId);
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    modalImage.src = product.image;
+    modalTitle.textContent = product.name;
+    modalDescription.textContent = product.description;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('imageModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderProducts();
+    const si = document.getElementById('searchInput');
+    const ss = document.getElementById('sortSelect');
+    if (si) si.addEventListener('input', applyFilters);
+    if (ss) ss.addEventListener('change', applyFilters);
+    applyFilters();
+    const btt = document.getElementById('backToTop');
+    if (btt) {
+        btt.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+        window.addEventListener('scroll', function() { if (window.scrollY > 200) btt.classList.add('visible'); else btt.classList.remove('visible'); });
+    }
+});
+    </script>
+    <button id="backToTop" class="back-to-top">▲</button>
+    <div id="sweepOverlay" class="sweep-overlay"></div>
+</body>
+</html>
