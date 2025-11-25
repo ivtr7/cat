@@ -105,7 +105,7 @@ const products = [
     { id: 25, name: "Chaveiro de couro Sonhagro", description: "Chaveiro minimalista em couro legítimo, presente sofisticado para clientes.", image: "/assets/1 (25).png" },
     { id: 26, name: "Plotagem de carro marca Sonhagro", description: "Envelopamento completo ou parcial de veículos, transforme seu carro em mídia.", image: "/assets/1 (26).png" },
     { id: 27, name: "Caneta Sonhagro", description: "Caneta esferográfica de alta qualidade com gravação a laser.", image: "/assets/1 (27).png" },
-    { id: 28, name: "Bola personalizada", description: "Bolas personalizadas - Futsal / Society / Volei.", image: "/assets/bola.png" }
+    { id: 28, name: "Bola personalizada", description: "Bolas personalizadas - Futsal / Society / Volei.", image: "/assets/BOLA.png" }
 ];
 
 function renderProducts(list) {
