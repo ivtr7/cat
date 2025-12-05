@@ -105,7 +105,8 @@ const products = [
     { id: 25, name: "Chaveiro de couro Sonhagro", description: "Chaveiro minimalista em couro legítimo, presente sofisticado para clientes.", image: "/assets/1 (25).png" },
     { id: 26, name: "Plotagem de carro marca Sonhagro", description: "Envelopamento completo ou parcial de veículos, transforme seu carro em mídia.", image: "/assets/1 (26).png" },
     { id: 27, name: "Caneta Sonhagro", description: "Caneta esferográfica de alta qualidade com gravação a laser.", image: "/assets/1 (27).png" },
-    { id: 28, name: "Bola personalizada", description: "Bolas personalizadas - Futsal / Society / Volei.", image: "/assets/bola.png" }
+    { id: 28, name: "Bola personalizada", description: "Bolas personalizadas - Futsal / Society / Volei.", image: "/assets/bola.png" },
+    { id: 29, name: "Pluviômetro Sonhagro", description: "Pluviômetro personalizado para medição de precipitação, ideal para monitoramento agrícola e pesquisas.", image: "/assets/pluviometro1.png" }
 ];
 
 function renderProducts(list) {
@@ -218,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Funcionalidade do carrinho
-const WHATSAPP_NUMBER = '5532998450698';
+const WHATSAPP_NUMBER = '5532998172368';
 let cart = [];
 
 function loadCart() { try { const raw = localStorage.getItem('sonhagro_cart'); cart = raw ? JSON.parse(raw) : []; } catch(e) { cart = []; } renderCart(); updateCartBadge(); }
